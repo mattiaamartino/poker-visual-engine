@@ -745,7 +745,7 @@ def generate_synthetic_data(num_samples:int, cards_folder:str, background_folder
 
     background_files = [f for f in os.listdir(background_folder) if not f.startswith('.') and os.path.isfile(os.path.join(background_folder, f))]
 
-    for i in tqdm(range(num_samples)):
+    for i in tqdm(range(num_samples), desc=f"Generating {output_folder}"):
         try:
 
             background_file = np.random.choice(background_files)
@@ -774,20 +774,16 @@ def generate_synthetic_data(num_samples:int, cards_folder:str, background_folder
 
             with open(label_full_path, "w") as f:
                 for c in final_hand_labels:
-                    f.write(f"{class_map[c[0]]} {c[1][-1][0]} {c[1][-1][1]} {c[1][-1][2]} {c[1][-1][3]}\n")
+                    f.write(f"{class_map[c[0]]} {c[1][-1][0]/640} {c[1][-1][1]/640} {c[1][-1][2]/640} {c[1][-1][3]/640}\n")
                 
                 if len(final_flop_labels) > 0:
                     for c in final_flop_labels:
-                        f.write(f"{class_map[c[0]]} {c[1][-1][0]} {c[1][-1][1]} {c[1][-1][2]} {c[1][-1][3]}\n")
-
-                
-
-                
-
-
+                        f.write(f"{class_map[c[0]]} {c[1][-1][0]/640} {c[1][-1][1]/640} {c[1][-1][2]/640} {c[1][-1][3]/640}\n")
 
 
         except:
             continue
 
-generate_synthetic_data(3, '../shared_data/benchmark', '../background', '../synthetic_data_trial', class_map)
+generate_synthetic_data(15_000, './data/benchmark', './data/background', './synthetic_dataset_v3/train', class_map)
+generate_synthetic_data(2_500, './data/benchmark', './data/background', './synthetic_dataset_v3/test', class_map)
+generate_synthetic_data(2_500, './data/benchmark', './data/background', './synthetic_dataset_v3/val', class_map)
